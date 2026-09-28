@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Huerta Mágica — Borrador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F9F6EE;
+    --bg-alt: #EAE3D3;
+    --card: #FFFFFF;
+    --ink: #2B2A22;
+    --ink-soft: #6E6959;
+    --green: #426746;
+    --green-deep: #2C4830;
+    --sage: #A8B999;
+    --terracotta: #D99A71;
+    --border: #E1DAC7;
+    --danger: #B4472F;
+    --radius: 18px;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #1E1C16;
+      --bg-alt: #26241C;
+      --card: #2C2A21;
+      --ink: #EFEADC;
+      --ink-soft: #BFB8A2;
+      --green: #8FBF95;
+      --green-deep: #B7DDB9;
+      --sage: #A8B999;
+      --terracotta: #E3AE85;
+      --border: #423E30;
+      --danger: #E28468;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1E1C16;
+    --bg-alt: #26241C;
+    --card: #2C2A21;
+    --ink: #EFEADC;
+    --ink-soft: #BFB8A2;
+    --green: #8FBF95;
+    --green-deep: #B7DDB9;
+    --sage: #A8B999;
+    --terracotta: #E3AE85;
+    --border: #423E30;
+    --danger: #E28468;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: calc(72px + env(safe-area-inset-top, 0px)); scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Figtree", sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  h1, h2, h3, .display { font-family: "Fraunces", serif; letter-spacing: -0.01em; }
+  a { color: inherit; }
+  img, svg { max-width: 100%; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- banner de borrador ---- */
+  .draft-banner {
+    background: var(--terracotta);
+    color: #3A2515;
+    text-align: center;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 16px;
+  }
+
+  /* ---- header ---- */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 1080px; margin: 0 auto; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: "Fraunces", serif; font-weight: 600; font-size: 20px; }
+  .brand-mark { width: 34px; height: 34px; flex-shrink: 0; }
+  .nav-links { display: flex; gap: 4px; align-items: center; }
+  .nav-links button {
+    background: none; border: none; font: inherit; font-size: 14.5px; color: var(--ink-soft);
+    padding: 8px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .nav-links button:hover { color: var(--ink); background: var(--bg-alt); }
+  .cart-btn {
+    position: relative; background: var(--green); color: white; border: none;
+    padding: 9px 16px; border-radius: 999px; font: inherit; font-size: 14.5px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .cart-count {
+    background: var(--terracotta); color: #2B1E05; font-size: 11.5px; font-weight: 700;
+    min-width: 18px; height: 18px; border-radius: 999px; display: flex; align-items: center; justify-content: center; padding: 0 4px;
+  }
+
+  section { padding: 64px 0; }
+  .section-alt { background: var(--bg-alt); }
+
+  /* ---- hero ---- */
+  .hero { padding: 56px 0 48px; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+  @media (max-width: 760px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } .hero { padding: 32px 0 40px; } }
+  .eyebrow-tag {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border);
+    padding: 6px 14px; border-radius: 999px; font-size: 13px; color: var(--ink-soft); margin-bottom: 18px;
+  }
+  .hero h1 { font-size: 44px; line-height: 1.08; font-weight: 600; margin: 0 0 16px; color: var(--green-deep); }
+  @media (max-width: 760px) { .hero h1 { font-size: 32px; } }
+  .hero p.lede { font-size: 17px; color: var(--ink-soft); line-height: 1.55; max-width: 46ch; margin: 0 0 28px; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 999px;
+    font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+  }
+  .btn-primary { background: var(--green); color: white; }
+  .btn-primary:hover { background: var(--green-deep); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+  .hero-art { display: flex; align-items: center; justify-content: center; }
+
+  /* ---- catalogo ---- */
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px; gap: 16px; flex-wrap: wrap; }
+  .section-head h2 { font-size: 28px; font-weight: 600; margin: 0; color: var(--green-deep); }
+  .section-head p { color: var(--ink-soft); margin: 4px 0 0; font-size: 14.5px; }
+
+  .grid-products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .grid-products { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .grid-products { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .card-img {
+    aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+    color: white; position: relative; overflow: hidden;
+  }
+  .card-body { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-body h3 { font-size: 17px; margin: 0; font-weight: 600; }
+  .seed-tag { font-size: 12.5px; color: var(--ink-soft); }
+  .price-row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px; }
+  .price { font-family: "Fraunces", serif; font-size: 20px; font-weight: 600; color: var(--green-deep); }
+  .stock-pill { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; font-weight: 600; }
+  .stock-ok { background: color-mix(in srgb, var(--green) 18%, transparent); color: var(--green-deep); }
+  .stock-out { background: color-mix(in srgb, var(--danger) 16%, transparent); color: var(--danger); }
+  .add-btn {
+    width: 100%; margin-top: 10px; background: var(--green); color: white; border: none;
+    padding: 10px; border-radius: 10px; font: inherit; font-weight: 600; font-size: 14px; cursor: pointer;
+  }
+  .add-btn:disabled { background: var(--border); color: var(--ink-soft); cursor: not-allowed; }
+  .add-btn:not(:disabled):hover { background: var(--green-deep); }
+
+  /* ---- como comprar ---- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+  .step { display: flex; gap: 14px; }
+  .step-num {
+    font-family: "Fraunces", serif; font-size: 22px; font-weight: 600; color: var(--green);
+    border: 1.5px solid var(--border); width: 42px; height: 42px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step h3 { margin: 4px 0 6px; font-size: 16.5px; }
+  .step p { margin: 0; color: var(--ink-soft); font-size: 14.5px; line-height: 1.5; }
+
+  /* ---- footer ---- */
+  footer { padding: 40px 0; border-top: 1px solid var(--border); }
+  .foot-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .foot-note { font-size: 13px; color: var(--ink-soft); }
+
+  /* ---- cart drawer ---- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(20, 22, 15, 0.4); z-index: 90;
+    opacity: 0; pointer-events: none; transition: opacity .25s ease;
+  }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; height: 100%; width: min(420px, 100%);
+    background: var(--bg); z-index: 91; transform: translateX(100%); transition: transform .3s ease;
+    display: flex; flex-direction: column; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+    border-left: 1px solid var(--border);
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--border); }
+  .drawer-head h3 { margin: 0; font-size: 18px; }
+  .icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--ink-soft); padding: 4px; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 12px 20px; }
+  .cart-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: center; }
+  .cart-item-thumb { width: 52px; height: 52px; border-radius: 10px; flex-shrink: 0; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-info h4 { margin: 0 0 2px; font-size: 14.5px; }
+  .qty-ctrl { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .qty-ctrl button { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); cursor: pointer; font: inherit; }
+  .empty-cart { text-align: center; color: var(--ink-soft); padding: 60px 20px; font-size: 14.5px; }
+  .drawer-foot { padding: 16px 20px; border-top: 1px solid var(--border); }
+  .total-row { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 4px; color: var(--ink-soft); }
+  .total-row.main { font-size: 18px; font-weight: 700; color: var(--ink); margin: 10px 0 16px; }
+
+  /* ---- modal generico (checkout / admin) ---- */
+  .modal {
+    position: fixed; inset: 0; z-index: 95; display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  @media (min-width: 640px) { .modal { align-items: center; } }
+  .modal-bg { position: absolute; inset: 0; background: rgba(20,22,15,0.45); }
+  .modal-panel {
+    position: relative; background: var(--bg); width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto;
+    border-radius: 22px 22px 0 0; padding: 24px; transform: translateY(24px); transition: transform .25s ease;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+  @media (min-width: 640px) { .modal-panel { border-radius: 20px; transform: scale(.97); } }
+  .modal.open .modal-panel { transform: none; }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .modal-head h3 { margin: 0; font-size: 19px; }
+  label { display: block; font-size: 13.5px; font-weight: 600; margin: 14px 0 6px; color: var(--ink-soft); }
+  input, select {
+    width: 100%; padding: 11px 12px; border-radius: 10px; border: 1.5px solid var(--border);
+    background: var(--card); color: var(--ink); font: inherit; font-size: 14.5px;
+  }
+  input:focus, select:focus, button:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; }
+  .qr-box { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center; margin: 16px 0; }
+  .qr-box canvas { margin: 0 auto; border-radius: 8px; }
+  .demo-flag { font-size: 12px; color: var(--terracotta); background: color-mix(in srgb, var(--terracotta) 20%, transparent); padding: 8px 10px; border-radius: 8px; margin-top: 10px; }
+
+  /* ---- admin ---- */
+  .admin-login { max-width: 340px; margin: 0 auto; text-align: center; }
+  .admin-row {
+    display: flex; gap: 12px; align-items: center; background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 12px 14px; margin-bottom: 10px;
+  }
+  .admin-thumb { width: 48px; height: 48px; border-radius: 10px; flex-shrink: 0; }
+  .admin-fields { flex: 1; display: grid; grid-template-columns: 1fr 90px 70px; gap: 8px; }
+  .admin-fields input { padding: 8px 10px; font-size: 13.5px; }
+  .admin-toggle { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
+  .err-msg { color: var(--danger); font-size: 13px; margin-top: 8px; min-height: 16px; }
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); z-index: 99;
+    background: var(--green-deep); color: white; padding: 11px 20px; border-radius: 999px; font-size: 14px;
+    transition: transform .25s ease; opacity: 0;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="draft-banner">🌱 Borrador para revisión — nombres, precios y fotos son de ejemplo, se reemplazan por los definitivos</div>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="20" fill="var(--green)"/>
+        <path d="M20 28V16" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M20 16C20 16 13 16.5 13 22C13 22 20 22.5 20 16Z" fill="white"/>
+        <path d="M20 20C20 20 27 20.5 27 26C27 26 20 26.5 20 20Z" fill="white"/>
+      </svg>
+      Huerta Mágica
+    </div>
+    <div class="nav-links">
+      <button onclick="scrollToId('inicio')">Inicio</button>
+      <button onclick="scrollToId('catalogo')">Catálogo</button>
+      <button onclick="scrollToId('comprar')">Cómo comprar</button>
+      <button onclick="openAdminLogin()">Admin</button>
+      <button class="cart-btn" onclick="openCart()">
+        Carrito <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow-tag">Proyecto de Parvularia · Educación Inicial</div>
+      <h1>Pequeñas manos,<br>grandes aprendizajes.</h1>
+      <p class="lede">Kits de jardinería pensados para que las niñas y niños siembren, cuiden y vean crecer su propia planta — aprendiendo ciencia, paciencia y cuidado del medio ambiente desde casa.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#catalogo" onclick="scrollToId('catalogo');return false;">Ver los kits</a>
+        <a class="btn btn-ghost" href="#comprar" onclick="scrollToId('comprar');return false;">Cómo funciona</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 320 300" width="100%" style="max-width:340px">
+        <ellipse cx="160" cy="270" rx="130" ry="16" fill="var(--terracotta)" opacity="0.18"/>
+        <rect x="100" y="190" width="120" height="80" rx="14" fill="var(--terracotta)"/>
+        <rect x="100" y="190" width="120" height="18" rx="9" fill="color-mix(in srgb, var(--terracotta) 70%, black)"/>
+        <path d="M160 190 C160 140 120 130 110 90" stroke="var(--green)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M160 190 C160 130 200 120 215 75" stroke="var(--green)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M160 190 C160 120 160 100 160 55" stroke="var(--green)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="110" cy="90" r="22" fill="var(--green)"/>
+        <circle cx="215" cy="75" r="26" fill="var(--green-deep)"/>
+        <circle cx="160" cy="55" r="30" fill="var(--terracotta)"/>
+        <circle cx="150" cy="46" r="4" fill="white" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt" id="catalogo">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Nuestros kits</h2>
+        <p>Cada uno trae semillas, sustrato, maceta y un cuadernito guía para acompañar el proceso.</p>
+      </div>
+    </div>
+    <div class="grid-products" id="productGrid"></div>
+  </div>
+</section>
+
+<section id="comprar">
+  <div class="wrap">
+    <div class="section-head"><h2>Cómo comprar</h2></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div><h3>Elige tu kit</h3><p>Agrega el kit que quieras al carrito según el tipo de semilla que prefieras.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div><h3>Paga el 50% por QR</h3><p>Escaneas el código, pagas el adelanto y subes el comprobante para confirmar tu pedido.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div><h3>Recíbelo en un día</h3><p>Preparamos tu kit y lo recoges en nuestro punto en la zona 16 de Julio.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="foot-note">Huerta Mágica — Proyecto de grado, Educación Inicial en Parvularia · El Alto, Bolivia</div>
+    <div class="foot-note">WhatsApp y redes: por confirmar</div>
+  </div>
+</footer>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<aside class="drawer" id="cartDrawer" aria-label="Carrito de compras">
+  <div class="drawer-head">
+    <h3>Tu carrito</h3>
+    <button class="icon-btn" onclick="closeAll()" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="drawer-body" id="cartBody"></div>
+  <div class="drawer-foot" id="cartFoot"></div>
+</aside>
+
+<!-- ===== CHECKOUT MODAL ===== -->
+<div class="modal" id="checkoutModal">
+  <div class="modal-bg" onclick="closeAll()"></div>
+  <div class="modal-panel">
+    <div class="modal-head"><h3>Finalizar pedido</h3><button class="icon-btn" onclick="closeAll()">✕</button></div>
+    <label>Nombre completo</label>
+    <input id="ckName" placeholder="Nombre y apellido">
+    <label>WhatsApp</label>
+    <input id="ckPhone" placeholder="Ej: 700 00000">
+    <label>Zona de entrega / retiro</label>
+    <input id="ckZone" placeholder="Ej: 16 de Julio">
+    <div class="qr-box">
+      <div style="font-size:13.5px;color:var(--ink-soft);margin-bottom:10px">Escanea para pagar el 50% de adelanto</div>
+      <div id="qrcode"></div>
+      <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;margin-top:10px" id="qrAmount">Bs 0</div>
+      <div class="demo-flag">QR de ejemplo — se reemplaza por el QR real de la cuenta cuando lo definan</div>
+    </div>
+    <label>Comprobante de pago (opcional en este borrador)</label>
+    <input type="file" id="ckFile">
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:18px" onclick="confirmOrder()">Confirmar pedido</button>
+  </div>
+</div>
+
+<!-- ===== ADMIN LOGIN MODAL ===== -->
+<div class="modal" id="adminLoginModal">
+  <div class="modal-bg" onclick="closeAll()"></div>
+  <div class="modal-panel admin-login">
+    <div class="modal-head" style="justify-content:center;position:relative">
+      <h3>Panel de administración</h3>
+      <button class="icon-btn" style="position:absolute;right:0" onclick="closeAll()">✕</button>
+    </div>
+    <p style="color:var(--ink-soft);font-size:13.5px;margin-top:0">Acceso solo para Erika y Sandra</p>
+    <label>Usuario</label>
+    <input id="adminUser" placeholder="admin">
+    <label>Contraseña</label>
+    <input id="adminPass" type="password" placeholder="••••••••">
+    <div class="err-msg" id="adminErr"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px" onclick="tryAdminLogin()">Entrar</button>
+    <div class="demo-flag" style="margin-top:14px">Demo: usuario <b>admin</b>, contraseña <b>huerta2026</b> — en la versión real cada una tendrá su propio usuario y contraseña segura</div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL MODAL ===== -->
+<div class="modal" id="adminPanelModal">
+  <div class="modal-bg" onclick="closeAll()"></div>
+  <div class="modal-panel" style="max-width:640px">
+    <div class="modal-head">
+      <h3>Editar productos</h3>
+      <button class="icon-btn" onclick="closeAll()">✕</button>
+    </div>
+    <p style="color:var(--ink-soft);font-size:13.5px;margin-top:-6px">Cambia precio, stock y disponibilidad. Se guarda al instante.</p>
+    <div id="adminList"></div>
+    <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:12px" onclick="logoutAdmin()">Cerrar sesión</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  const COLORS = ['#426746', '#D99A71', '#7C9A6C', '#2C4830'];
+  const STORAGE_KEY = 'huerta-magica-borrador-v1';
+
+  const DEFAULT_PRODUCTS = [
+    { id: 'p1', nombre: 'Kit Creando Vida — Albahaca', semilla: 'Albahaca', precio: 45, stock: 12, activo: true },
+    { id: 'p2', nombre: 'Kit Creando Vida — Girasol', semilla: 'Girasol', precio: 45, stock: 8, activo: true },
+    { id: 'p3', nombre: 'Kit Creando Vida — Frejol', semilla: 'Frejol', precio: 40, stock: 0, activo: true },
+    { id: 'p4', nombre: 'Kit Creando Vida — Rabanito', semilla: 'Rabanito', precio: 40, stock: 15, activo: true },
+  ];
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return { products: DEFAULT_PRODUCTS, cart: {} };
+  }
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  let state = loadState();
+  let isAdmin = false;
+
+  function money(n) { return 'Bs ' + Number(n).toFixed(0); }
+
+  function renderProducts() {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = state.products.map((p, i) => `
+      <div class="card">
+        <div class="card-img" style="background:${COLORS[i % COLORS.length]}">
+          <svg viewBox="0 0 60 60" width="46" height="46" opacity="0.85">
+            <path d="M30 46V22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            <path d="M30 22C30 22 18 23 18 32C18 32 30 33 30 22Z" fill="white"/>
+            <path d="M30 30C30 30 42 31 42 38C42 38 30 39 30 30Z" fill="white"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h3>${p.nombre}</h3>
+          <div class="seed-tag">Semilla: ${p.semilla}</div>
+          <div class="price-row">
+            <span class="price">${money(p.precio)}</span>
+            <span class="stock-pill ${p.stock > 0 && p.activo ? 'stock-ok' : 'stock-out'}">${p.activo === false ? 'No disponible' : (p.stock > 0 ? p.stock + ' disponibles' : 'Agotado')}</span>
+          </div>
+          <button class="add-btn" ${(p.stock <= 0 || p.activo === false) ? 'disabled' : ''} onclick="addToCart('${p.id}')">Agregar al carrito</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addToCart(id) {
+    state.cart[id] = (state.cart[id] || 0) + 1;
+    saveState();
+    renderCartCount();
+    showToast('Agregado al carrito');
+  }
+
+  function changeQty(id, delta) {
+    const next = (state.cart[id] || 0) + delta;
+    if (next <= 0) delete state.cart[id];
+    else state.cart[id] = next;
+    saveState();
+    renderCartCount();
+    renderCartDrawer();
+  }
+
+  function renderCartCount() {
+    const total = Object.values(state.cart).reduce((a, b) => a + b, 0);
+    document.getElementById('cartCount').textContent = total;
+  }
+
+  function cartTotal() {
+    let total = 0;
+    for (const [id, qty] of Object.entries(state.cart)) {
+      const p = state.products.find(p => p.id === id);
+      if (p) total += p.precio * qty;
+    }
+    return total;
+  }
+
+  function renderCartDrawer() {
+    const body = document.getElementById('cartBody');
+    const foot = document.getElementById('cartFoot');
+    const entries = Object.entries(state.cart).filter(([id, qty]) => qty > 0);
+
+    if (entries.length === 0) {
+      body.innerHTML = `<div class="empty-cart">Tu carrito está vacío.<br>Agrega un kit desde el catálogo.</div>`;
+      foot.innerHTML = '';
+      return;
+    }
+
+    body.innerHTML = entries.map(([id, qty], i) => {
+      const p = state.products.find(p => p.id === id);
+      if (!p) return '';
+      return `
+        <div class="cart-item">
+          <div class="cart-item-thumb" style="background:${COLORS[i % COLORS.length]}"></div>
+          <div class="cart-item-info">
+            <h4>${p.nombre}</h4>
+            <div class="seed-tag">${money(p.precio)} c/u</div>
+            <div class="qty-ctrl">
+              <button onclick="changeQty('${id}', -1)">−</button>
+              <span>${qty}</span>
+              <button onclick="changeQty('${id}', 1)">+</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const total = cartTotal();
+    const adelanto = total * 0.5;
+    foot.innerHTML = `
+      <div class="total-row"><span>Total</span><span>${money(total)}</span></div>
+      <div class="total-row main"><span>Adelanto a pagar (50%)</span><span>${money(adelanto)}</span></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="openCheckout()">Ir a pagar</button>
+    `;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  function scrollToId(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ---- overlays / modals ----
+  function closeAll() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.getElementById('checkoutModal').classList.remove('open');
+    document.getElementById('adminLoginModal').classList.remove('open');
+    document.getElementById('adminPanelModal').classList.remove('open');
+  }
+  function openCart() {
+    closeAll();
+    renderCartDrawer();
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('cartDrawer').classList.add('open');
+  }
+  function openCheckout() {
+    closeAll();
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('checkoutModal').classList.add('open');
+    const total = cartTotal();
+    const adelanto = total * 0.5;
+    document.getElementById('qrAmount').textContent = money(adelanto);
+    const qrEl = document.getElementById('qrcode');
+    qrEl.innerHTML = '';
+    try {
+      new QRCode(qrEl, {
+        text: `HUERTA-MAGICA-PEDIDO-DEMO-${adelanto}`,
+        width: 140, height: 140,
+        colorDark: '#23301F', colorLight: '#FFFFFF'
+      });
+    } catch (e) {}
+  }
+  function confirmOrder() {
+    const name = document.getElementById('ckName').value.trim();
+    if (!name) { showToast('Falta el nombre'); return; }
+    closeAll();
+    state.cart = {};
+    saveState();
+    renderCartCount();
+    showToast('Pedido de ejemplo confirmado 🌱');
+  }
+
+  function openAdminLogin() {
+    closeAll();
+    document.getElementById('adminErr').textContent = '';
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('adminLoginModal').classList.add('open');
+  }
+  function tryAdminLogin() {
+    const u = document.getElementById('adminUser').value.trim();
+    const p = document.getElementById('adminPass').value.trim();
+    if (u === 'admin' && p === 'huerta2026') {
+      isAdmin = true;
+      closeAll();
+      openAdminPanel();
+    } else {
+      document.getElementById('adminErr').textContent = 'Usuario o contraseña incorrectos';
+    }
+  }
+  function logoutAdmin() {
+    isAdmin = false;
+    closeAll();
+  }
+  function openAdminPanel() {
+    renderAdminList();
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('adminPanelModal').classList.add('open');
+  }
+  function renderAdminList() {
+    const list = document.getElementById('adminList');
+    list.innerHTML = state.products.map((p, i) => `
+      <div class="admin-row">
+        <div class="admin-thumb" style="background:${COLORS[i % COLORS.length]}"></div>
+        <div class="admin-fields">
+          <input value="${p.nombre}" onchange="updateProduct('${p.id}','nombre',this.value)">
+          <input type="number" value="${p.precio}" onchange="updateProduct('${p.id}','precio',this.value)">
+          <input type="number" value="${p.stock}" onchange="updateProduct('${p.id}','stock',this.value)">
+        </div>
+        <label class="admin-toggle">
+          <input type="checkbox" style="width:auto" ${p.activo !== false ? 'checked' : ''} onchange="updateProduct('${p.id}','activo',this.checked)">
+          Activo
+        </label>
+      </div>
+    `).join('');
+  }
+  function updateProduct(id, field, value) {
+    const p = state.products.find(p => p.id === id);
+    if (!p) return;
+    if (field === 'precio' || field === 'stock') value = Number(value);
+    p[field] = value;
+    saveState();
+    renderProducts();
+    showToast('Guardado');
+  }
+
+  renderProducts();
+  renderCartCount();
+</script>
+</body>
+</html>
